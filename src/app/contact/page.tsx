@@ -12,9 +12,11 @@ const inputStyle = { borderColor: "#1A1A1A", background: "#111111" };
 const inputFocus = { borderColor: "#2E2E2E" };
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", company: "", type: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", company: "", type: "", message: "", phone: "" });
+  const [smsConsent, setSmsConsent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
 
   const set = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
     setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
@@ -22,9 +24,20 @@ export default function ContactPage() {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 1000));
-    setLoading(false);
-    setDone(true);
+    setError("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, smsConsent, source: "contact" }),
+      });
+      if (!res.ok) throw new Error("Failed");
+      setDone(true);
+    } catch {
+      setError("Something went wrong. Please email us directly at hello@codenestwebstudios.com");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -146,6 +159,18 @@ export default function ContactPage() {
                     </div>
 
                     <div>
+                      <label className="label block mb-2">Phone (optional)</label>
+                      <input
+                        type="tel" name="phone" value={form.phone} onChange={set}
+                        placeholder="+1 (555) 000-0000"
+                        className={inputClass}
+                        style={inputStyle}
+                        onFocus={(e) => Object.assign(e.currentTarget.style, inputFocus)}
+                        onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
+                      />
+                    </div>
+
+                    <div>
                       <label className="label block mb-2">About your project</label>
                       <textarea
                         name="message" required value={form.message} onChange={set}
@@ -157,6 +182,38 @@ export default function ContactPage() {
                         onBlur={(e) => Object.assign(e.currentTarget.style, inputStyle)}
                       />
                     </div>
+
+                    {form.phone && (
+                      <label className="flex items-start gap-3 cursor-pointer">
+                        <div className="relative mt-0.5 flex-shrink-0">
+                          <input
+                            type="checkbox"
+                            checked={smsConsent}
+                            onChange={(e) => setSmsConsent(e.target.checked)}
+                            className="sr-only peer"
+                          />
+                          <div
+                            className="w-4 h-4 rounded border transition-colors peer-checked:bg-blue"
+                            style={{ borderColor: smsConsent ? "#7EB8D4" : "#2E2E2E", background: smsConsent ? "#7EB8D4" : "transparent" }}
+                          />
+                          {smsConsent && (
+                            <svg className="absolute inset-0 w-4 h-4 text-ink pointer-events-none" viewBox="0 0 16 16" fill="none">
+                              <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          )}
+                        </div>
+                        <p className="text-xs leading-relaxed" style={{ color: "#555555" }}>
+                          I consent to receive recurring automated marketing text messages from Codenest Web Studios at the phone number provided. Consent is not a condition of purchase. Message &amp; data rates may apply. Message frequency varies. Reply STOP to opt out, HELP for help. View our{" "}
+                          <a href="/privacy" className="underline hover:text-blue transition-colors">Privacy Policy</a>{" "}
+                          and{" "}
+                          <a href="/terms" className="underline hover:text-blue transition-colors">Terms &amp; Conditions</a>.
+                        </p>
+                      </label>
+                    )}
+
+                    {error && (
+                      <p className="text-sm" style={{ color: "#E07B7B" }}>{error}</p>
+                    )}
 
                     <button
                       type="submit"

@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Policy" lastUpdated="January 1, 2025">
+    <LegalPage title="Privacy Policy" lastUpdated="April 9, 2026">
       <section>
         <h2>1. Introduction</h2>
         <p>
@@ -117,7 +117,46 @@ export default function PrivacyPage() {
       </section>
 
       <section>
-        <h2>11. Contact Us</h2>
+        <h2>11. SMS / Text Message Marketing</h2>
+        <h3>Program Description</h3>
+        <p>
+          Codenest Web Studios operates an SMS marketing program to send project updates, promotional offers, and informational messages to subscribers who have provided explicit written consent.
+        </p>
+
+        <h3>Consent</h3>
+        <p>
+          By providing your mobile phone number and checking the SMS consent box on our website forms, you expressly consent to receive recurring automated marketing text messages from Codenest Web Studios at the mobile number provided. Consent is not a condition of purchase or use of our services.
+        </p>
+
+        <h3>Message Frequency</h3>
+        <p>Message frequency varies. You may receive up to 4 messages per month depending on your engagement and our current campaigns.</p>
+
+        <h3>Costs</h3>
+        <p>Message and data rates may apply. Check with your mobile carrier for details.</p>
+
+        <h3>How to Opt Out</h3>
+        <p>
+          You may opt out of SMS messages at any time by replying <strong>STOP</strong> to any message you receive from us. After opting out, you will receive one final confirmation message. To re-subscribe, reply <strong>START</strong>.
+        </p>
+
+        <h3>Help</h3>
+        <p>
+          For help, reply <strong>HELP</strong> to any SMS message or contact us at hello@codenestwebstudios.com.
+        </p>
+
+        <h3>Supported Carriers</h3>
+        <p>
+          Carriers are not liable for delayed or undelivered messages. Supported carriers include but are not limited to: AT&amp;T, T-Mobile, Verizon, Sprint, Boost Mobile, MetroPCS, U.S. Cellular, and other major US carriers.
+        </p>
+
+        <h3>Data Use</h3>
+        <p>
+          Mobile phone numbers collected for SMS messaging will only be used for the stated purpose and will not be shared with third parties for their own marketing purposes.
+        </p>
+      </section>
+
+      <section>
+        <h2>12. Contact Us</h2>
         <p>
           If you have questions about this Privacy Policy or our data practices, please contact us at:
         </p>

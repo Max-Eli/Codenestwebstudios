@@ -5,6 +5,7 @@ import ServicesSection from "@/components/sections/ServicesSection";
 import ProcessSection from "@/components/sections/ProcessSection";
 import Testimonials from "@/components/sections/Testimonials";
 import CTASection from "@/components/sections/CTASection";
+import HomePopup from "@/components/sections/HomePopup";
 
 export default function Home() {
   return (
@@ -18,6 +19,7 @@ export default function Home() {
         <CTASection />
       </main>
       <Footer />
+      <HomePopup />
     </>
   );
 }

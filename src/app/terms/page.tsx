@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms & Conditions" lastUpdated="January 1, 2025">
+    <LegalPage title="Terms & Conditions" lastUpdated="April 9, 2026">
       <section>
         <h2>1. Agreement to Terms</h2>
         <p>
@@ -116,7 +116,45 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2>11. Contact</h2>
+        <h2>11. SMS Marketing Program</h2>
+        <h3>Program Overview</h3>
+        <p>
+          By opting in to our SMS marketing program, you agree to receive recurring automated marketing and informational text messages from Codenest Web Studios. These messages may include project updates, promotional offers, service announcements, and other business-related communications.
+        </p>
+
+        <h3>Consent Requirement</h3>
+        <p>
+          Participation in our SMS program requires your express written consent, provided via the opt-in checkbox on our website contact forms or other designated sign-up methods. <strong>Consent is never required as a condition of purchasing any goods or services.</strong>
+        </p>
+
+        <h3>TCPA Compliance</h3>
+        <p>
+          Our SMS program is operated in compliance with the Telephone Consumer Protection Act (TCPA) and The Campaign Registry (TCR) guidelines. We use an approved messaging platform registered with TCR for all commercial SMS communications.
+        </p>
+
+        <h3>Opt-Out</h3>
+        <p>
+          You may opt out of receiving SMS messages at any time by replying <strong>STOP</strong> to any message. Upon receipt, we will process your opt-out within a reasonable time and send a final confirmation. To re-enroll, reply <strong>START</strong> or re-submit your consent on our website.
+        </p>
+
+        <h3>Help</h3>
+        <p>
+          Reply <strong>HELP</strong> to any SMS for assistance, or email us at hello@codenestwebstudios.com.
+        </p>
+
+        <h3>Message Frequency and Costs</h3>
+        <p>
+          Message frequency varies based on your interactions with us. Message and data rates may apply based on your mobile carrier plan.
+        </p>
+
+        <h3>Liability</h3>
+        <p>
+          Codenest Web Studios is not responsible for any charges incurred by you from your mobile carrier as a result of receiving SMS messages from our program.
+        </p>
+      </section>
+
+      <section>
+        <h2>12. Contact</h2>
         <p>
           Questions about these Terms? Contact us at hello@codenestwebstudios.com.
         </p>
