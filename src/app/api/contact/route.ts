@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       `;
 
     await resend.emails.send({
-      from: "Codenest Website <onboarding@resend.dev>",
+      from: "Codenest Web Studios <hello@codenestwebstudios.com>",
       to: TO,
       replyTo: email,
       subject: isPopup
