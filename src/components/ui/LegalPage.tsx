@@ -1,36 +1,36 @@
+import type { ReactNode } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { FadeUp, DrawLine } from "@/components/ui/Motion";
-import AnimatedSections from "@/components/ui/AnimatedSections";
-import type { ReactNode } from "react";
+import { Reveal } from "@/components/ui/Motion";
 
-interface LegalPageProps {
+export default function LegalPage({
+  title,
+  lastUpdated,
+  children,
+}: {
   title: string;
   lastUpdated: string;
   children: ReactNode;
-}
-
-export default function LegalPage({ title, lastUpdated, children }: LegalPageProps) {
+}) {
   return (
     <>
       <Header />
       <main>
-        <section className="pt-32 pb-14" style={{ background: "#0C0C0C" }}>
+        <section className="pb-14 pt-32 md:pt-[150px]">
           <div className="container-site">
-            <FadeUp>
-              <p className="label mb-4">Legal</p>
-              <h1 className="heading-xl text-snow">{title}</h1>
-              <p className="text-sm mt-3" style={{ color: "#444444" }}>Last updated: {lastUpdated}</p>
-            </FadeUp>
+            <Reveal className="label-mono mb-6">Legal</Reveal>
+            <Reveal as="h1" index={1} className="display-2 max-w-[18ch]">
+              {title}
+            </Reveal>
+            <Reveal as="p" index={2} className="mono mt-6 text-[11.5px] uppercase tracking-[0.09em]" style={{ color: "var(--fg-5)" }}>
+              Last updated: {lastUpdated}
+            </Reveal>
           </div>
         </section>
 
-        <section className="pb-24" style={{ background: "#0C0C0C" }}>
+        <section className="section rule-top">
           <div className="container-site">
-            <DrawLine />
-            <div className="max-w-2xl pt-4 prose-content">
-              <AnimatedSections>{children}</AnimatedSections>
-            </div>
+            <div className="prose-content max-w-[68ch]">{children}</div>
           </div>
         </section>
       </main>

@@ -1,118 +1,121 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import CTASection from "@/components/sections/CTASection";
-import { FadeUp, Stagger, StaggerItem, DrawLine } from "@/components/ui/Motion";
-import PageGraphic from "@/components/ui/PageGraphic";
-import { ArrowUpRight } from "lucide-react";
+import PageHero from "@/components/ui/PageHero";
+import { Reveal } from "@/components/ui/Motion";
+import { services } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Services",
-  description: "Web development, mobile app development, and custom software for ambitious businesses.",
+  description:
+    "Custom web applications, mobile apps, CRMs, AI automation, integrations and long-term cloud care.",
+  alternates: { canonical: "/services" },
 };
-
-const services = [
-  {
-    index: "01",
-    title: "Web Development",
-    slug: "web-development",
-    tagline: "Websites and web apps that perform.",
-    description:
-      "From marketing sites to full-stack platforms — fast, accessible, and built to convert. We use Next.js, React, and TypeScript.",
-    deliverables: ["Marketing sites", "Web applications", "E-commerce", "CMS integration", "SEO & performance"],
-  },
-  {
-    index: "02",
-    title: "Mobile Apps",
-    slug: "mobile-app-development",
-    tagline: "iOS & Android apps users return to.",
-    description:
-      "React Native cross-platform apps with native performance. We handle design, development, and App Store submission.",
-    deliverables: ["React Native apps", "iOS & Android", "App Store launch", "Push notifications", "Offline support"],
-  },
-  {
-    index: "03",
-    title: "Custom Software",
-    slug: "custom-software",
-    tagline: "Software that fits your business exactly.",
-    description:
-      "SaaS platforms, APIs, automation tools, and enterprise systems built to your exact requirements — not someone else's.",
-    deliverables: ["SaaS platforms", "REST & GraphQL APIs", "Automation", "Cloud infrastructure", "AI integrations"],
-  },
-];
 
 export default function ServicesPage() {
   return (
     <>
       <Header />
       <main>
-        {/* Page header */}
-        <section className="pt-32 pb-16" style={{ background: "#0C0C0C" }}>
-          <div className="container-site">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_440px] items-center gap-8">
-              <FadeUp>
-                <p className="label mb-4">Services</p>
-                <h1 className="heading-xl text-snow max-w-2xl">
-                  Three disciplines. One team.
-                </h1>
-              </FadeUp>
-              <div className="hidden lg:flex items-center justify-end">
-                <PageGraphic variant="services" />
-              </div>
-            </div>
+        <PageHero
+          eyebrow="Services"
+          title="From the first sketch to the fifth year of maintenance."
+          lede="Six things we do. Most projects use two or three of them. If your problem doesn't fit any of these neatly, say so — the first conversation is about diagnosis, not selling."
+        >
+          <div className="mono flex flex-wrap gap-2.5 text-[11.5px] uppercase tracking-[0.08em]">
+            {services.map((s) => (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className="border px-3.5 py-2.5 transition-colors hover:border-[var(--accent)] hover:text-[var(--accent-bright)]"
+                style={{ borderColor: "var(--line-5)", color: "var(--fg-4)" }}
+              >
+                {s.index} {s.title.replace(/ & .*/, "").replace("Custom web applications", "Web apps")}
+              </a>
+            ))}
           </div>
-        </section>
+        </PageHero>
 
-        {/* Services */}
-        <section className="section" style={{ background: "#0C0C0C" }}>
-          <div className="container-site">
-            <DrawLine />
-            <Stagger>
-              {services.map((s) => (
-                <StaggerItem key={s.slug}>
-                  <div
-                    className="py-14 border-b grid grid-cols-1 lg:grid-cols-12 gap-8"
-                    style={{ borderColor: "#1A1A1A" }}
-                  >
-                    {/* Left */}
-                    <div className="lg:col-span-5">
-                      <span className="text-sm font-mono block mb-4" style={{ color: "#333333" }}>
-                        {s.index}
-                      </span>
-                      <h2 className="heading-md text-snow mb-2">{s.title}</h2>
-                      <p className="text-sm mb-4" style={{ color: "#7EB8D4" }}>{s.tagline}</p>
-                      <p className="text-sm leading-relaxed" style={{ color: "#666666" }}>
-                        {s.description}
-                      </p>
-                    </div>
-
-                    {/* Right */}
-                    <div className="lg:col-span-5 lg:col-start-8">
-                      <p className="label mb-4">Deliverables</p>
-                      <ul className="flex flex-col gap-2 mb-8">
-                        {s.deliverables.map((d) => (
-                          <li key={d} className="flex items-center gap-2.5 text-sm" style={{ color: "#666666" }}>
-                            <span className="w-1 h-1 rounded-full flex-shrink-0" style={{ background: "#333333" }} />
-                            {d}
-                          </li>
-                        ))}
-                      </ul>
-                      <Link
-                        href={`/services/${s.slug}`}
-                        className="inline-flex items-center gap-1.5 text-sm text-ink-6 hover:text-snow transition-colors"
-                      >
-                        Learn more <ArrowUpRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
+        {services.map((s, i) => {
+          const flipped = i % 2 === 1;
+          return (
+            <section
+              key={s.id}
+              id={s.id}
+              className="rule-top scroll-mt-20 py-16 md:py-20"
+              style={{ background: flipped ? "var(--bg-2)" : "var(--bg)" }}
+            >
+              <div className="container-site grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-[70px]">
+                <Reveal className={flipped ? "lg:order-2" : undefined}>
+                  <div className="mono mb-5 text-[11.5px]" style={{ color: "var(--accent)" }}>
+                    {s.index}
                   </div>
-                </StaggerItem>
-              ))}
-            </Stagger>
+                  <h2 className="heading-3">{s.title}</h2>
+                  <p className="mt-5 max-w-[46ch] text-[16.5px] leading-[1.65] md:text-[17.5px]" style={{ color: "var(--fg-3)" }}>
+                    {s.long}
+                  </p>
+
+                  <ul className="mt-9 flex list-none flex-col gap-3.5 p-0">
+                    {s.points.map((p) => (
+                      <li key={p} className="flex gap-3.5 text-[15px] md:text-base" style={{ color: "var(--fg-2)" }}>
+                        <span className="mono flex-shrink-0 text-xs" style={{ color: "var(--accent)" }}>
+                          →
+                        </span>
+                        {p}
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div
+                    className="mono mt-9 flex flex-wrap gap-x-11 gap-y-2 border-t pt-5 text-[11.5px] uppercase tracking-[0.08em]"
+                    style={{ borderColor: "var(--line-3)", color: "var(--fg-5)" }}
+                  >
+                    <span>{s.timeline}</span>
+                    {/* PLACEHOLDER pricing — edit in src/content/site.ts */}
+                    <span>{s.price}</span>
+                  </div>
+                </Reveal>
+
+                <Reveal
+                  index={1}
+                  className={`hatch aspect-[4/3] ${flipped ? "lg:order-1" : ""}`}
+                >
+                  <span className="mono text-[11.5px] uppercase tracking-[0.1em]" style={{ color: "var(--fg-6)" }}>
+                    [ {s.placeholderImage} ]
+                  </span>
+                </Reveal>
+              </div>
+            </section>
+          );
+        })}
+
+        <section className="section rule-top">
+          <div className="container-site">
+            <Reveal className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-[70px]">
+              <div>
+                <h2 className="heading-2 max-w-[22ch]">Not sure which of these you need?</h2>
+                <p className="mt-6 max-w-[48ch] text-[16.5px] leading-[1.65] md:text-[17.5px]" style={{ color: "var(--fg-3)" }}>
+                  That&apos;s the normal starting point. Describe the process that&apos;s hurting and
+                  we&apos;ll tell you which of the six actually solves it — including when the answer
+                  is &ldquo;buy something off the shelf&rdquo;.
+                </p>
+              </div>
+              <div className="flex flex-col gap-3.5">
+                <Link
+                  href="/contact"
+                  data-magnetic
+                  className="btn btn-accent justify-between"
+                >
+                  Request a scoping estimate <span className="mono">→</span>
+                </Link>
+                <Link href="/work" data-magnetic className="btn btn-outline justify-between">
+                  See what we&apos;ve built <span className="mono">→</span>
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </section>
-
-        <CTASection />
       </main>
       <Footer />
     </>

@@ -1,186 +1,205 @@
 "use client";
 
-import { useRef, useEffect, type ReactNode } from "react";
 import {
-  motion,
-  useInView,
-  type Variants,
-  type MotionProps,
-} from "framer-motion";
+  useEffect,
+  useRef,
+  useState,
+  type ElementType,
+  type ReactNode,
+} from "react";
 
-// ─── Fade up on enter ───────────────────────────────────────────────
-const fadeUpVariants: Variants = {
-  hidden: { opacity: 0, y: 28 },
-  visible: (delay: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1], delay },
-  }),
-};
+const EASE = "cubic-bezier(.16,1,.3,1)";
 
-interface FadeUpProps extends MotionProps {
+export function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mq.matches);
+    const on = () => setReduced(mq.matches);
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+  return reduced;
+}
+
+/**
+ * Scroll reveal — the design's `[data-reveal]`. Fades up 28px once, then stops
+ * observing. `index` reproduces the source's sibling stagger (70ms steps,
+ * capped at 420ms) without the parent needing to coordinate.
+ */
+export function Reveal({
+  children,
+  as: Tag = "div",
+  index = 0,
+  delay = 0,
+  className,
+  style,
+  id,
+}: {
   children: ReactNode;
+  as?: ElementType;
+  index?: number;
   delay?: number;
   className?: string;
-  once?: boolean;
-}
-
-export function FadeUp({ children, delay = 0, className, once = true, ...props }: FadeUpProps) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once, margin: "-60px 0px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      variants={fadeUpVariants}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      custom={delay}
-      className={className}
-      {...props}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// ─── Stagger container ──────────────────────────────────────────────
-const staggerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0 } },
-};
-
-const staggerChildVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-interface StaggerProps {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-}
-
-export function Stagger({ children, className, delay = 0 }: StaggerProps) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      variants={staggerVariants}
-      initial="hidden"
-      animate={inView ? "visible" : "hidden"}
-      className={className}
-      transition={{ delayChildren: delay }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div variants={staggerChildVariants} className={className}>
-      {children}
-    </motion.div>
-  );
-}
-
-// ─── Slide in from side ─────────────────────────────────────────────
-interface SlideInProps {
-  children: ReactNode;
-  direction?: "left" | "right";
-  delay?: number;
-  className?: string;
-}
-
-export function SlideIn({ children, direction = "left", delay = 0, className }: SlideInProps) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px 0px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, x: direction === "left" ? -32 : 32 }}
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: direction === "left" ? -32 : 32 }}
-      transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1], delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// ─── Reveal (fade only) ─────────────────────────────────────────────
-export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px 0px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0 }}
-      animate={inView ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.7, ease: "easeOut", delay }}
-      className={className}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-// ─── Line draw (for horizontal rule animations) ─────────────────────
-export function DrawLine({ delay = 0, className }: { delay?: number; className?: string }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px 0px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ scaleX: 0, originX: 0 }}
-      animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
-      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay }}
-      className={className ?? "rule"}
-    />
-  );
-}
-
-// ─── Count up number ────────────────────────────────────────────────
-export function CountUp({ to, suffix = "", duration = 1.5, delay = 0 }: { to: number; suffix?: string; duration?: number; delay?: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
+  style?: React.CSSProperties;
+  id?: string;
+}) {
+  const ref = useRef<HTMLElement>(null);
+  const [shown, setShown] = useState(false);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
-    if (!inView || !ref.current) return;
-    const start = Date.now() + delay * 1000;
+    if (reduced) {
+      setShown(true);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    // Anything already above the fold on load reveals immediately.
+    if (el.getBoundingClientRect().top <= window.innerHeight * 0.9) {
+      setShown(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
 
-    const tick = () => {
-      const now = Date.now();
-      if (now < start) { requestAnimationFrame(tick); return; }
-      const progress = Math.min((now - start) / (duration * 1000), 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      if (ref.current) ref.current.textContent = Math.round(eased * to) + suffix;
-      if (progress < 1) requestAnimationFrame(tick);
-    };
-    requestAnimationFrame(tick);
-  }, [inView, to, suffix, duration, delay]);
+  const totalDelay = reduced ? 0 : Math.min(index * 70, 420) + delay * 1000;
 
-  return <span ref={ref}>0{suffix}</span>;
-}
-
-// ─── Hover card scale ───────────────────────────────────────────────
-export function HoverCard({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <motion.div
-      whileHover={{ y: -3, transition: { duration: 0.2, ease: "easeOut" } }}
+    <Tag
+      ref={ref}
+      id={id}
       className={className}
+      style={{
+        opacity: shown ? 1 : 0,
+        transform: shown ? "none" : "translateY(28px)",
+        transition: reduced
+          ? undefined
+          : `opacity .8s ${EASE} ${totalDelay}ms, transform .9s ${EASE} ${totalDelay}ms`,
+        ...style,
+      }}
     >
       {children}
-    </motion.div>
+    </Tag>
+  );
+}
+
+/** Counts up to `to` on first view, easing out cubic over 1.4s. */
+export function CountUp({
+  to,
+  suffix = "",
+  className,
+  style,
+}: {
+  to: number;
+  suffix?: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [n, setN] = useState(0);
+  const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (reduced) {
+      setN(to);
+      return;
+    }
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    let started = false;
+
+    const run = () => {
+      if (started) return;
+      started = true;
+      const t0 = performance.now();
+      const step = (t: number) => {
+        const p = Math.min(1, (t - t0) / 1400);
+        setN(Math.round(to * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    if (el.getBoundingClientRect().top < window.innerHeight) {
+      run();
+      return () => cancelAnimationFrame(raf);
+    }
+
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          run();
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelAnimationFrame(raf);
+    };
+  }, [to, reduced]);
+
+  return (
+    <span ref={ref} className={className} style={style}>
+      {n}
+      {suffix}
+    </span>
+  );
+}
+
+/** Translates on scroll at `rate` of scroll distance. Off under reduced motion. */
+export function Parallax({
+  children,
+  rate = 0.06,
+  className,
+  style,
+}: {
+  children: ReactNode;
+  rate?: number;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const reduced = usePrefersReducedMotion();
+
+  useEffect(() => {
+    if (reduced) return;
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const tick = () => {
+      raf = 0;
+      const y = window.scrollY || document.documentElement.scrollTop;
+      el.style.transform = `translateY(${(y * rate * -1).toFixed(1)}px)`;
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(tick);
+    };
+    tick();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [rate, reduced]);
+
+  return (
+    <div ref={ref} className={className} style={style}>
+      {children}
+    </div>
   );
 }

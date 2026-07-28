@@ -1,91 +1,59 @@
 import Link from "next/link";
-import { DrawLine } from "@/components/ui/Motion";
+import { site } from "@/content/site";
+import { Wordmark } from "./Header";
 
-const cols = [
-  {
-    heading: "Services",
-    links: [
-      { label: "Web Development", href: "/services/web-development" },
-      { label: "Mobile Apps", href: "/services/mobile-app-development" },
-      { label: "Custom Software", href: "/services/custom-software" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { label: "About", href: "/about" },
-      { label: "Blog", href: "/blog" },
-      { label: "Contact", href: "/contact" },
-    ],
-  },
-  {
-    heading: "Legal",
-    links: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms & Conditions", href: "/terms" },
-    ],
-  },
+const links = [
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "Engagements", href: "/engagements" },
+  { label: "About", href: "/about" },
+  { label: "Insights", href: "/insights" },
+  { label: "Contact", href: "/contact" },
+];
+
+const legal = [
+  { label: "Privacy", href: "/privacy" },
+  { label: "Terms", href: "/terms" },
 ];
 
 export default function Footer() {
   return (
-    <footer className="border-t border-ink-3" style={{ background: "#0C0C0C" }}>
-      <div className="container-site">
-        <div className="py-16 grid grid-cols-2 md:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 mb-5 group"
-            >
-              <span
-                className="font-display font-semibold text-base text-snow group-hover:opacity-70 transition-opacity"
-                style={{ letterSpacing: "-0.02em" }}
-              >
-                Codenest
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-blue flex-shrink-0 mt-0.5" />
-            </Link>
-            <p className="text-sm leading-relaxed max-w-[220px] text-ink-5">
-              Web, mobile & custom software for ambitious businesses.
-            </p>
-            <a
-              href="mailto:hello@codenestwebstudios.com"
-              className="mt-5 block text-sm text-ink-5 hover:text-snow-2 transition-colors"
-            >
-              hello@codenestwebstudios.com
-            </a>
-          </div>
+    <footer className="rule-top" style={{ background: "var(--bg-2)" }}>
+      <div className="container-site py-14">
+        <div className="mono flex flex-wrap items-center justify-between gap-x-8 gap-y-7 text-[11.5px] uppercase tracking-[0.08em]">
+          <Link href="/" style={{ color: "var(--fg)" }} aria-label={`${site.name} — home`}>
+            <Wordmark size={11} />
+          </Link>
 
-          {/* Link columns */}
-          {cols.map((col) => (
-            <div key={col.heading}>
-              <p className="label mb-4">{col.heading}</p>
-              <ul className="flex flex-col gap-2.5">
-                {col.links.map((link) => (
-                  <li key={link.href}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-ink-5 hover:text-snow-2 transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          <nav className="flex flex-wrap gap-x-6 gap-y-3" style={{ color: "var(--fg-5)" }}>
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className="transition-colors hover:text-[var(--accent-bright)]">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </div>
 
-        <DrawLine />
-
-        <div className="py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <p className="text-sm text-ink-4">
-            © {new Date().getFullYear()} Codenest Web Studios
-          </p>
-          <p className="text-sm text-ink-4">
-            Remote-first · Serving clients worldwide
-          </p>
+        <div
+          className="mono mt-10 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t pt-7 text-[11.5px] uppercase tracking-[0.08em]"
+          style={{ borderColor: "var(--line)", color: "var(--fg-6)" }}
+        >
+          <span>
+            © {new Date().getFullYear()} {site.name}
+          </span>
+          <a
+            href={`mailto:${site.email}`}
+            className="normal-case tracking-normal transition-colors hover:text-[var(--accent-bright)]"
+          >
+            {site.email}
+          </a>
+          <nav className="flex gap-6">
+            {legal.map((l) => (
+              <Link key={l.href} href={l.href} className="transition-colors hover:text-[var(--accent-bright)]">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

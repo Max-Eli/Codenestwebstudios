@@ -1,139 +1,79 @@
-"use client";
-
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
-import HeroGraphic from "./HeroGraphic";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import ParticleField from "@/components/ui/ParticleField";
+import { Reveal, Parallax } from "@/components/ui/Motion";
+import { site, stack } from "@/content/site";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center overflow-hidden" style={{ background: "#0C0C0C" }}>
-      {/* Very subtle grid */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px)",
-          backgroundSize: "80px 80px",
-        }}
-      />
+    <>
+      <section
+        id="top"
+        className="relative flex min-h-[100svh] items-center overflow-hidden px-0 pb-20 pt-32 md:pb-24 md:pt-[150px]"
+      >
+        <ParticleField />
 
-      {/* Single soft glow — barely visible */}
-      <div
-        className="absolute pointer-events-none"
-        style={{
-          width: 600,
-          height: 600,
-          borderRadius: "50%",
-          top: "30%",
-          left: "55%",
-          transform: "translate(-50%, -50%)",
-          background: "radial-gradient(circle, rgba(126,184,212,0.06) 0%, transparent 65%)",
-        }}
-      />
+        <div className="container-site relative">
+          <Reveal className="label-mono mb-8 flex items-center gap-3">
+            <span
+              aria-hidden
+              className="block h-[7px] w-[7px] flex-shrink-0 animate-pulse-dot rounded-full"
+              style={{ background: "var(--accent)" }}
+            />
+            Custom software studio
+          </Reveal>
 
-      <div className="container-site relative z-10 pt-28 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_460px] items-center gap-8">
-        <div className="max-w-xl">
-          {/* Label */}
-          <motion.p
-            className="label-blue mb-7"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Web · Mobile · Software
-          </motion.p>
+          <Parallax rate={0.06}>
+            <Reveal as="h1" index={1} className="display-1 max-w-[17.5ch]">
+              Software built around how your business actually works.
+            </Reveal>
+          </Parallax>
 
-          {/* Headline */}
-          <motion.h1
-            className="heading-xl mb-6 text-snow"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, ease, delay: 0.2 }}
-          >
-            Digital products
-            <br />
-            <span style={{ color: "#444444" }}>built to last.</span>
-          </motion.h1>
+          <Reveal as="p" index={2} className="lede mt-9 max-w-[57ch]">
+            {site.description}
+          </Reveal>
 
-          {/* Sub */}
-          <motion.p
-            className="text-lg max-w-lg leading-relaxed mb-10"
-            style={{ color: "#666666" }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease, delay: 0.35 }}
-          >
-            We design and engineer websites, mobile apps, and custom software for businesses that care about quality.
-          </motion.p>
-
-          {/* CTAs */}
-          <motion.div
-            className="flex flex-wrap items-center gap-3"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease, delay: 0.5 }}
-          >
-            <Link href="/contact" className="btn btn-dark">
-              Start a project
-              <ArrowRight className="w-4 h-4" />
+          <Reveal index={3} className="mt-11 flex flex-wrap gap-3.5">
+            <Link href="/contact" data-magnetic className="btn btn-accent">
+              Get an estimate
+              <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/services" className="btn btn-ghost">
-              Our services
+            <Link href="/work" data-magnetic className="btn btn-outline">
+              See recent work
             </Link>
-          </motion.div>
+          </Reveal>
 
-          {/* Stats row */}
-          <motion.div
-            className="mt-20 flex flex-wrap gap-x-12 gap-y-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.75 }}
+          <Reveal
+            index={4}
+            className="mono mt-16 flex flex-wrap gap-x-9 gap-y-3 border-t pt-7 text-[11.5px] uppercase tracking-[0.08em]"
+            style={{ borderColor: "var(--line)", color: "var(--fg-5)" }}
           >
-            {[
-              { n: "150+", label: "Projects shipped" },
-              { n: "8 yrs", label: "In business" },
-              { n: "98%", label: "Repeat clients" },
-            ].map(({ n, label }) => (
-              <div key={label}>
-                <p
-                  className="font-display text-2xl font-semibold text-snow"
-                  style={{ letterSpacing: "-0.02em" }}
-                >
-                  {n}
-                </p>
-                <p className="text-sm mt-0.5" style={{ color: "#555555" }}>
-                  {label}
-                </p>
-              </div>
+            {site.heroFacts.map((f) => (
+              <span key={f}>{f}</span>
             ))}
-          </motion.div>
+          </Reveal>
         </div>
+      </section>
 
-        {/* Hero graphic — right column, desktop only */}
-        <div className="hidden lg:flex items-center justify-end">
-          <HeroGraphic />
-        </div>
+      {/* Tech marquee */}
+      <div
+        className="overflow-hidden border-y py-5"
+        style={{ background: "var(--bg-2)", borderColor: "rgba(255,255,255,0.07)" }}
+        aria-hidden
+      >
+        <div className="mono flex w-max animate-marquee text-[12.5px] uppercase tracking-[0.1em]" style={{ color: "var(--fg-6)" }}>
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex gap-11 pr-11">
+              {stack.map((t, i) => (
+                <span key={`${dup}-${t}`} className="flex items-center gap-11">
+                  {t}
+                  {i < stack.length - 1 && <span style={{ color: "var(--accent)" }}>/</span>}
+                </span>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
-
-      {/* Bottom scroll hint */}
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 0.6 }}
-      >
-        <motion.div
-          className="w-px bg-ink-5"
-          style={{ height: 48 }}
-          animate={{ scaleY: [0, 1, 0], originY: 0 }}
-          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-        />
-      </motion.div>
-    </section>
+    </>
   );
 }

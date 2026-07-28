@@ -1,16 +1,36 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { site } from "@/content/site";
 
 const nav = [
   { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "Engagements", href: "/engagements" },
   { label: "About", href: "/about" },
-  { label: "Blog", href: "/blog" },
+  { label: "Insights", href: "/insights" },
 ];
+
+export function Wordmark({ size = 13 }: { size?: number }) {
+  return (
+    <span className="flex items-center gap-2.5">
+      <span
+        aria-hidden
+        className="block flex-shrink-0 rotate-45"
+        style={{ width: size, height: size, background: "var(--accent)" }}
+      />
+      <span
+        className="font-semibold tracking-tight"
+        style={{ fontSize: size + 4, letterSpacing: "-0.02em" }}
+      >
+        {site.shortName}
+      </span>
+    </span>
+  );
+}
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -19,117 +39,95 @@ export default function Header() {
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 24);
+    fn();
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
+  useEffect(() => setOpen(false), [pathname]);
 
-  const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname.startsWith(href);
+  // Keep the page behind the mobile sheet from scrolling.
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
+  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-[900] transition-[background,border-color] duration-300"
         style={{
-          background: scrolled ? "rgba(12,12,12,0.92)" : "transparent",
-          borderBottom: scrolled ? "1px solid #1A1A1A" : "1px solid transparent",
-          backdropFilter: scrolled ? "blur(16px)" : "none",
+          background: scrolled
+            ? "rgba(8,9,11,0.9)"
+            : "linear-gradient(180deg, rgba(8,9,11,0.92), rgba(8,9,11,0))",
+          backdropFilter: "blur(10px)",
+          borderBottom: `1px solid ${scrolled ? "var(--line)" : "transparent"}`,
         }}
       >
-        <div className="container-site">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/" className="group flex items-center gap-2">
-              <span
-                className="font-display font-semibold text-base tracking-tight text-snow transition-opacity group-hover:opacity-80"
-                style={{ letterSpacing: "-0.02em" }}
+        <div className="container-site flex h-[68px] items-center justify-between">
+          <Link href="/" aria-label={`${site.name} — home`}>
+            <Wordmark />
+          </Link>
+
+          <nav className="mono hidden items-center gap-7 text-[11.5px] uppercase tracking-[0.09em] lg:flex">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                data-magnetic
+                className="transition-colors duration-200"
+                style={{ color: isActive(item.href) ? "var(--accent-bright)" : "var(--fg-4)" }}
+                aria-current={isActive(item.href) ? "page" : undefined}
               >
-                Codenest
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-blue flex-shrink-0 mt-0.5" />
-            </Link>
-
-            {/* Desktop nav */}
-            <nav className="hidden md:flex items-center gap-0.5">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="relative px-4 py-2 text-sm transition-colors rounded-md group"
-                  style={{
-                    color: isActive(item.href) ? "#F5F5F3" : "#888888",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!isActive(item.href))
-                      (e.currentTarget as HTMLElement).style.color = "#7EB8D4";
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = isActive(item.href) ? "#F5F5F3" : "#888888";
-                  }}
-                >
-                  {item.label}
-                  {isActive(item.href) && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-blue" />
-                  )}
-                </Link>
-              ))}
-            </nav>
-
-            {/* CTA */}
-            <div className="hidden md:flex">
-              <Link href="/contact" className="btn btn-dark text-sm">
-                Start a project
+                {item.label}
               </Link>
-            </div>
+            ))}
+            <Link href="/contact" data-magnetic className="btn btn-accent-outline">
+              Get an estimate
+            </Link>
+          </nav>
 
-            {/* Mobile toggle */}
-            <button
-              onClick={() => setOpen((v) => !v)}
-              className="md:hidden p-2 text-ink-6 hover:text-snow transition-colors"
-              aria-label="Menu"
-            >
-              {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
+          <button
+            onClick={() => setOpen((v) => !v)}
+            className="-mr-2 p-2 lg:hidden"
+            style={{ color: "var(--fg-3)" }}
+            aria-label={open ? "Close menu" : "Open menu"}
+            aria-expanded={open}
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </header>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.2 }}
-            className="fixed inset-x-0 top-16 z-40 border-b"
-            style={{ background: "#111111", borderColor: "#1A1A1A" }}
-          >
-            <nav className="container-site py-4 flex flex-col gap-1">
-              {nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="py-3 px-2 text-sm border-b"
-                  style={{
-                    color: isActive(item.href) ? "#F5F5F3" : "#888888",
-                    borderColor: "#1A1A1A",
-                  }}
-                >
-                  {item.label}
-                </Link>
-              ))}
-              <div className="pt-3">
-                <Link href="/contact" className="btn btn-dark w-full justify-center">
-                  Start a project
-                </Link>
-              </div>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {open && (
+        <div
+          className="fixed inset-0 top-[68px] z-[899] lg:hidden"
+          style={{ background: "var(--bg)" }}
+        >
+          <nav className="container-site flex flex-col pt-4">
+            {nav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="border-b py-5 text-lg"
+                style={{
+                  borderColor: "var(--line-3)",
+                  color: isActive(item.href) ? "var(--accent-bright)" : "var(--fg)",
+                }}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link href="/contact" className="btn btn-accent mt-8 justify-center">
+              Get an estimate
+            </Link>
+          </nav>
+        </div>
+      )}
     </>
   );
 }
