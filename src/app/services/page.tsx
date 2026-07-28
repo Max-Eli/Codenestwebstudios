@@ -3,6 +3,7 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import PageHero from "@/components/ui/PageHero";
+import ServiceMockup, { type MockupVariant } from "@/components/ui/ServiceMockup";
 import { Reveal } from "@/components/ui/Motion";
 import { services } from "@/content/site";
 
@@ -77,13 +78,11 @@ export default function ServicesPage() {
                   </div>
                 </Reveal>
 
-                <Reveal
-                  index={1}
-                  className={`hatch aspect-[4/3] ${flipped ? "lg:order-1" : ""}`}
-                >
-                  <span className="mono text-[11.5px] uppercase tracking-[0.1em]" style={{ color: "var(--fg-6)" }}>
-                    [ {s.placeholderImage} ]
-                  </span>
+                <Reveal index={1} className={flipped ? "lg:order-1" : undefined}>
+                  <ServiceMockup
+                    variant={s.id as MockupVariant}
+                    className="aspect-[4/3] w-full"
+                  />
                 </Reveal>
               </div>
             </section>
