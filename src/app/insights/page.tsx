@@ -23,7 +23,7 @@ export default function InsightsPage() {
         <PageHero
           eyebrow="Insights"
           title="Writing for the person signing the cheque."
-          lede="No framework hot takes. Practical notes on when custom software is worth it, what a good estimate looks like, and how to judge an automation vendor."
+          lede="No framework hot takes. When we publish here it's about the decisions that cost money — whether custom software is worth it at all, what a good estimate looks like, and how to judge an automation vendor."
         />
 
         <section className="section rule-top">
@@ -63,9 +63,10 @@ export default function InsightsPage() {
               </div>
             ) : (
               <EmptyState
-                eyebrow="Nothing published yet"
-                title="The first articles are in draft."
-                body="The mockup shipped three headlines with no articles behind them. Rather than publish empty stubs, add entries to insights in src/content/site.ts — each one appears here and in the homepage sidebar automatically."
+                eyebrow="First pieces in draft"
+                title="We'd rather write three good ones."
+                body="Padding this page out with search-bait would be easy and useless. If there's something you want a straight answer on — whether to buy or build, how to read an estimate, what to ask an AI vendor — send the question over and we'll answer it directly."
+                cta={{ label: "Send us a question", href: "/contact" }}
               />
             )}
           </div>

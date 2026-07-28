@@ -2,13 +2,13 @@ import Link from "next/link";
 import { Reveal } from "@/components/ui/Motion";
 import { services } from "@/content/site";
 
-export default function ServicesGrid() {
+export default function ServicesGrid({ num = "01" }: { num?: string }) {
   return (
     <section id="services" className="pb-24 pt-10 md:pb-[120px]">
       <div className="container-site">
         <Reveal className="flex flex-col justify-between gap-8 border-b pb-11 md:flex-row md:items-end" style={{ borderColor: "var(--line-3)" }}>
           <div>
-            <div className="label-mono mb-5">01 / What we build</div>
+            <div className="label-mono mb-5">{num} / What we build</div>
             <h2 className="heading-1 max-w-[22ch]">One team for the whole software problem.</h2>
           </div>
           <p className="max-w-[38ch] text-base leading-relaxed" style={{ color: "var(--fg-4)" }}>

@@ -16,7 +16,7 @@ import { usePrefersReducedMotion } from "@/components/ui/Motion";
  *
  * Hidden entirely until real projects exist in src/content/site.ts.
  */
-export default function WorkCarousel() {
+export default function WorkCarousel({ num = "03" }: { num?: string }) {
   const pinRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const [pinned, setPinned] = useState(false);
@@ -79,7 +79,7 @@ export default function WorkCarousel() {
       >
         <div className="container-site flex items-end justify-between gap-8">
           <div>
-            <div className="label-mono mb-4">03 / Selected work</div>
+            <div className="label-mono mb-4">{num} / Selected work</div>
             <h2 className="heading-2">Built, shipped, still running.</h2>
           </div>
           <Link

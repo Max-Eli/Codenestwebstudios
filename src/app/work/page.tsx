@@ -22,7 +22,7 @@ export default function WorkPage() {
         <PageHero
           eyebrow="Work"
           title="Built, shipped, still running."
-          lede="Every project here replaced something manual. We list what changed after launch, not how many hours it took us."
+          lede="We publish a project only once the client has signed off on what we can say about it — so this page moves slowly on purpose. If you want to see something closer to your own situation, ask and we'll walk you through it."
         />
 
         <section className="section rule-top">
@@ -37,9 +37,10 @@ export default function WorkPage() {
               </div>
             ) : (
               <EmptyState
-                eyebrow="Nothing published yet"
-                title="Case studies are being written up."
-                body="Rather than publish invented projects, this page stays empty until there's real work with a client's permission behind it. Add entries to caseStudies in src/content/site.ts and they appear here and on the homepage automatically."
+                eyebrow="Case studies in progress"
+                title="Written up, one client at a time."
+                body="We don't publish a project until the client has approved the numbers in it, which takes longer than writing the page. Tell us the process you're trying to fix and we'll talk you through the closest thing we've built — in detail, on a call."
+                cta={{ label: "Ask about relevant work", href: "/contact" }}
               />
             )}
           </div>

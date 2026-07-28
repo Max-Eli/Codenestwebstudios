@@ -6,7 +6,7 @@ import { faqs, insights } from "@/content/site";
  * Native <details>/<summary> rather than a JS accordion — it is keyboard
  * operable, announced correctly by screen readers, and works before hydration.
  */
-export default function FaqSection() {
+export default function FaqSection({ num = "08", insightsNum = "09" }: { num?: string; insightsNum?: string }) {
   const hasInsights = insights.length > 0;
 
   return (
@@ -17,7 +17,7 @@ export default function FaqSection() {
         }`}
       >
         <div>
-          <Reveal className="label-mono mb-5">08 / Common questions</Reveal>
+          <Reveal className="label-mono mb-5">{num} / Common questions</Reveal>
           <Reveal className="flex flex-col">
             {faqs.map((f) => (
               <details key={f.q} className="group border-b" style={{ borderColor: "var(--line-3)" }}>
@@ -44,7 +44,7 @@ export default function FaqSection() {
 
         {hasInsights && (
           <div>
-            <Reveal className="label-mono mb-5">09 / Insights</Reveal>
+            <Reveal className="label-mono mb-5">{insightsNum} / Insights</Reveal>
             <div className="hairline-grid grid-cols-1">
               {insights.slice(0, 3).map((post, i) => (
                 <Reveal key={post.slug} index={i}>

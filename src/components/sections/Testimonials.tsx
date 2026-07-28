@@ -5,13 +5,13 @@ import { testimonials } from "@/content/site";
  * Hidden until real, permissioned client quotes exist in src/content/site.ts.
  * See the note at the top of that file on why invented ones were not shipped.
  */
-export default function Testimonials() {
+export default function Testimonials({ num = "05" }: { num?: string }) {
   if (testimonials.length === 0) return null;
 
   return (
     <section className="section">
       <div className="container-site">
-        <Reveal className="label-mono mb-11">05 / What clients say</Reveal>
+        <Reveal className="label-mono mb-11">{num} / What clients say</Reveal>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t, i) => (

@@ -1,7 +1,7 @@
 import { Reveal } from "@/components/ui/Motion";
 import { industries } from "@/content/site";
 
-export default function IndustriesGrid() {
+export default function IndustriesGrid({ num = "04" }: { num?: string }) {
   return (
     <section className="section rule-top" style={{ background: "var(--bg-2)" }}>
       <div className="container-site">
@@ -9,7 +9,7 @@ export default function IndustriesGrid() {
           <h2 className="heading-2 max-w-[24ch]">
             Industries where we already know the vocabulary
           </h2>
-          <div className="label-mono whitespace-nowrap">04 / Industries</div>
+          <div className="label-mono whitespace-nowrap">{num} / Industries</div>
         </Reveal>
 
         <Reveal className="hairline-grid grid-cols-2 lg:grid-cols-4">
