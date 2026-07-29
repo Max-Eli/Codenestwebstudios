@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { Reveal } from "@/components/ui/Motion";
 import { site } from "@/content/site";
 
@@ -37,6 +37,10 @@ export default function ContactSection({ eyebrow = "10 / Start here" }: { eyebro
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
+  // Anti-spam: honeypot value (bots fill it, humans never see it) and the time
+  // the form was mounted, so the server can reject implausibly fast submits.
+  const [hp, setHp] = useState("");
+  const mountedAt = useRef(Date.now());
 
   const set = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -50,7 +54,13 @@ export default function ContactSection({ eyebrow = "10 / Start here" }: { eyebro
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, smsConsent, source: "contact" }),
+        body: JSON.stringify({
+          ...form,
+          smsConsent,
+          source: "contact",
+          website: hp,
+          elapsedMs: Date.now() - mountedAt.current,
+        }),
       });
       if (!res.ok) throw new Error("Failed");
       setDone(true);
@@ -119,6 +129,27 @@ export default function ContactSection({ eyebrow = "10 / Start here" }: { eyebro
             </div>
           ) : (
             <form onSubmit={submit} className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {/*
+                Honeypot. Positioned off-screen rather than display:none so bots
+                that skip hidden fields still fill it. aria-hidden + tabIndex=-1
+                keep it away from screen-reader and keyboard users.
+              */}
+              <div
+                aria-hidden
+                style={{ position: "absolute", left: "-9999px", top: "-9999px", height: 0, width: 0, overflow: "hidden" }}
+              >
+                <label htmlFor={`${uid}-website`}>Leave this field empty</label>
+                <input
+                  id={`${uid}-website`}
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={hp}
+                  onChange={(e) => setHp(e.target.value)}
+                />
+              </div>
+
               <div className="flex flex-col gap-2.5">
                 <label htmlFor={`${uid}-name`} className={labelClass} style={{ color: "var(--fg-5)" }}>
                   Your name

@@ -50,6 +50,94 @@ function rateLimited(ip: string): boolean {
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
+/**
+ * Spam defence. None of this asks a real visitor to do anything — the goal is
+ * to keep genuine "I have a problem, can you build X" inquiries flowing while
+ * dropping the automated "we can boost your Google ranking" flood.
+ *
+ * Layers, cheapest first:
+ *   1. Honeypot  — a field hidden from humans; only bots fill it.
+ *   2. Timing    — a person can't read and complete the form in < 2.5s.
+ *   3. Content   — weighted score over links + known spam phrasing.
+ * A hit on 1 or 2 is a certain bot and is dropped outright. Content uses a
+ * threshold so a real message that happens to include one link survives.
+ */
+const MIN_FILL_MS = 2500;
+
+/** Throwaway inbox providers. Real clients don't pitch projects from these. */
+const DISPOSABLE_DOMAINS = new Set([
+  "mailinator.com", "guerrillamail.com", "guerrillamailblock.com", "sharklasers.com",
+  "10minutemail.com", "tempmail.com", "temp-mail.org", "throwawaymail.com",
+  "yopmail.com", "getnada.com", "trashmail.com", "dispostable.com", "maildrop.cc",
+  "mailnesia.com", "fakeinbox.com", "emailondeck.com", "spam4.me", "mohmal.com",
+  "moakt.com", "tempail.com", "mintemail.com", "tempinbox.com", "mytemp.email",
+  "discard.email", "fake-mail.net", "mailcatch.com",
+]);
+
+/** Phrases that overwhelmingly show up in cold outreach / SEO spam, not leads. */
+const SPAM_PHRASES = [
+  "seo service", "seo expert", "search engine ranking", "rank your website",
+  "rank higher", "first page of google", "top of google", "backlink", "guest post",
+  "link building", "increase traffic", "boost your traffic", "web traffic",
+  "digital marketing service", "lead generation service", "we can help you rank",
+  "improve your ranking", "cold email", "casino", "viagra", "bitcoin", "crypto",
+  "forex", "loan offer", "make money", "work from home", "gift card", "cheap price",
+  "best rates", "whatsapp me", "telegram", "b2b leads", "verified leads",
+];
+
+/**
+ * Returns a drop reason string when the submission looks like spam, or null to
+ * let it through. `hp` is the honeypot value; `elapsedMs` is how long the form
+ * was on screen before submit (both supplied by the client).
+ */
+function spamReason(input: {
+  name?: unknown;
+  email?: unknown;
+  company?: unknown;
+  message?: unknown;
+  hp?: unknown;
+  elapsedMs?: unknown;
+}): string | null {
+  // 1. Honeypot — hidden field, so any value at all is a bot.
+  if (typeof input.hp === "string" && input.hp.trim() !== "") return "honeypot";
+
+  // 2. Timing — filled in faster than a human could read it.
+  const elapsed = Number(input.elapsedMs);
+  if (Number.isFinite(elapsed) && elapsed >= 0 && elapsed < MIN_FILL_MS) {
+    return `too-fast(${elapsed}ms)`;
+  }
+
+  const name = String(input.name ?? "").toLowerCase();
+  const company = String(input.company ?? "").toLowerCase();
+  const message = String(input.message ?? "").toLowerCase();
+  const email = String(input.email ?? "").toLowerCase();
+  const haystack = `${name} ${company} ${message}`;
+
+  // A link in the name field is never a real person — hard drop.
+  if (/https?:\/\/|www\.|\.[a-z]{2,}\//i.test(name)) return "url-in-name";
+
+  let score = 0;
+
+  const urlCount = (haystack.match(/https?:\/\/|www\.|\[url/gi) ?? []).length;
+  if (urlCount >= 2) score += 2;
+  else if (urlCount === 1) score += 1;
+
+  let phraseHits = 0;
+  for (const phrase of SPAM_PHRASES) {
+    if (haystack.includes(phrase)) phraseHits += 1;
+  }
+  score += phraseHits * 1.5;
+
+  // Bulk Cyrillic in a message to an English-language studio is a spam tell.
+  if ((message.match(/[Ѐ-ӿ]/g) ?? []).length > 8) score += 2;
+
+  // Throwaway inbox — suspicious, but only in combination with the above.
+  const domain = email.split("@")[1] ?? "";
+  if (DISPOSABLE_DOMAINS.has(domain)) score += 2;
+
+  return score >= 3 ? `content-score(${score})` : null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const ip =
@@ -65,13 +153,26 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { name, email, company, budget, message, phone, smsConsent, source } = body;
+    const { name, email, company, budget, message, phone, smsConsent, source, website, elapsedMs } =
+      body;
 
     if (!name || typeof name !== "string" || name.trim().length < 2) {
       return NextResponse.json({ error: "Please enter your name." }, { status: 400 });
     }
     if (!email || typeof email !== "string" || !EMAIL_RE.test(email)) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
+    }
+
+    // Bot / spam screening. On a hit we return the same 200 a real submit gets,
+    // so bots believe it worked and don't retry — but nothing is emailed. The
+    // dropped payload is logged so a false positive is recoverable from logs.
+    const dropReason = spamReason({ name, email, company, message, hp: website, elapsedMs });
+    if (dropReason) {
+      console.warn(
+        `Contact API — dropped spam [${dropReason}] from ${ip}:`,
+        JSON.stringify({ name, email, company, message }).slice(0, 500)
+      );
+      return NextResponse.json({ ok: true });
     }
 
     const resend = getResend();
