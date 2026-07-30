@@ -581,7 +581,47 @@ export type Insight = {
   body: { type: "h2" | "p"; text: string }[];
 };
 
-export const insights: Insight[] = [];
+export const insights: Insight[] = [
+  {
+    slug: 'how-to-choose-a-custom-software-development-company-what-a-g',
+    title: 'How to Choose a Custom Software Development Company: What a Good Answer Actually Sounds Like',
+    date: 'Jul 30, 2026',
+    readingTime: '5 min read',
+    category: 'Strategy',
+    excerpt: 'A plain-language guide to vetting a custom software development company — real questions on code ownership, estimates, billing, and what happens if it ends.',
+    body: [
+      { type: 'h2', text: 'The Three Questions That Matter More Than the Rest of the List' },
+      { type: 'p', text: 'Vendor-selection checklists tend to pile up questions: portfolio, tech stack, team size, process, references. Ask enough of them and you\'ll get smooth answers to all of them, because any vendor who\'s done this a few times has smooth answers ready. What\'s harder to fake is the mechanics underneath three specific questions: who owns the code, how the estimate was built, and what happens when the relationship ends.' },
+      { type: 'p', text: 'If you\'re the person signing the cheque at a mid-sized company that\'s outgrown the spreadsheet everyone secretly runs the business on, those three questions will tell you more than the rest of the checklist combined.' },
+      { type: 'h2', text: 'An Estimate Given Before Discovery Is a Guess' },
+      { type: 'p', text: 'If a company quotes you a fixed price on the first call, before anyone has looked at your data, your integrations, or the exceptions your ops team handles by hand, that number wasn\'t built. It was guessed. It might land close. It might not. Either way you didn\'t pay for accuracy, because nothing was measured yet.' },
+      { type: 'p', text: 'We run a discovery week for a flat $4,800. If you continue into the build, that fee is credited back in full. You\'re not paying twice. You\'re paying to find the real shape of the problem before either of us commits to a number. It ends with a written scope, an architecture sketch, and a fixed estimate built from what your systems actually do.' },
+      { type: 'p', text: 'Estimates should come after discovery, not before. That\'s the whole reason ours holds once it\'s written down.' },
+      { type: 'h2', text: 'Who Owns the Code — and Who Owns the Servers It Runs On' },
+      { type: 'p', text: '"Make sure you own the code" is common advice. You can own every line in a repo and still be stuck, if the infrastructure it runs on sits in someone else\'s cloud account, under someone else\'s login.' },
+      { type: 'p', text: 'You own the code outright from day one. The repos live in your organisation, not ours. The infrastructure runs in your own AWS account, built as infrastructure as code — servers, pipelines, environment, all of it. If we disappeared tomorrow, you\'d have the code, the infrastructure, and the ability to hand both to someone else without asking us for anything. Ask any vendor where the cloud account lives, not just where the code lives.' },
+      { type: 'h2', text: 'If They Want Equity Instead of Cash, End the Call' },
+      { type: 'p', text: 'Some vendors will offer to take part of the fee in equity, or defer payment against future revenue, and call it a partnership.' },
+      { type: 'p', text: 'We don\'t. It muddies the relationship, and it has never once made the software better. Cash, milestones, clear scope. That\'s the whole structure, and it keeps everyone pointed at the same target.' },
+      { type: 'h2', text: 'A Good Vendor Says No Sometimes' },
+      { type: 'p', text: 'Not every problem needs custom software. Some need a specialist who does nothing but that one kind of build. Some are already solved off the shelf, for a tenth of what a custom build would cost.' },
+      { type: 'p', text: 'We turn down projects a specialist would do better, or that an existing off-the-shelf product already solves for a tenth of the price. If that\'s true of your project, you\'ll hear it in the first call, not the third, and not after a discovery fee has changed hands.' },
+      { type: 'h2', text: 'Boring Technology, on Purpose' },
+      { type: 'p', text: 'A vendor showing off an unusual stack is not necessarily showing you something good. Novelty in a production system gets paid for every year after launch, by whoever inherits it: scarcer hires, thinner documentation, more things breaking in ways nobody\'s seen before.' },
+      { type: 'p', text: 'For custom web applications, we build on React, Node and Postgres. For mobile, Swift and Kotlin natively, React Native where it fits. None of that will impress anyone at a conference. That\'s the point.' },
+      { type: 'h2', text: 'What Sane Billing Looks Like' },
+      { type: 'p', text: 'A fixed-scope project starts from $28k per phase, billed on milestones: typically 30% at kickoff, then the rest tied to phase acceptance. That includes 30 days of post-launch fixes. A dedicated squad — one designer, two engineers, one lead — starts from $18k a month, on rolling three-month terms, billed monthly in advance. Ongoing care and improvement starts from $4.5k a month, cancel with 30 days\' notice. Everything runs on Net 14 terms.' },
+      { type: 'p', text: 'See the pricing page for the full breakdown by project type.' },
+      { type: 'h2', text: 'What Happens When You Stop Working Together' },
+      { type: 'p', text: 'Ours is a full handover. Architecture walkthrough, runbooks, two weeks of support on the other side. The person who does the walkthrough is the same person who scoped the project in the first place. A named lead stays with you from the first scoping call through launch. No handoff to a junior team partway through.' },
+      { type: 'h2', text: 'NDAs and Security Questionnaires Should Be Boring' },
+      { type: 'p', text: 'If you\'re in healthcare, fintech or insurance, a vendor should expect a security review as a normal part of getting hired, not treat it as a favor. We work under NDA by default, and we complete vendor security questionnaires as part of onboarding.' },
+      { type: 'h2', text: 'Start Smaller Than You Think You Need To' },
+      { type: 'p', text: 'A discovery week costs a flat $4,800, credited back in full if you continue. It\'s a small, bounded way to find out how a vendor thinks before committing to anything larger.' },
+      { type: 'p', text: 'If the real problem is narrower than a full platform rebuild — two systems that don\'t talk to each other, a report someone rebuilds by hand every week — integrations and data work starts from $22k, typically 4 to 10 weeks, and stands on its own as a first phase, not a down payment on something bigger. A phased plan lets you see the work before you\'re committed to all of it. Check the discovery workshop process and how we turn scope into a fixed estimate before deciding how big a first step you want to take.' },
+    ],
+  },
+];
 
 /**
  * Derived navigation visibility.
