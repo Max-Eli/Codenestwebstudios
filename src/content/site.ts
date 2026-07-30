@@ -214,6 +214,31 @@ export const services = [
     price: "From $4.5k / month", // PLACEHOLDER — mockup figure
     placeholderImage: "monitoring dashboard",
   },
+  {
+    // Copy here describes the actual agent in ~/Github/ai seo bot: a four-stage
+    // pipeline (research → outline → draft → critique/rewrite) publishing to
+    // WordPress. Deliberately claims no rankings or traffic outcomes, and does
+    // not mention Shopify/Webflow/Ghost, keyword planning or internal linking —
+    // those are on that project's "not built yet" list.
+    id: "seo",
+    index: "07",
+    code: "A—07",
+    title: "AI SEO agent",
+    short:
+      "Blog posts that read like the owner wrote them — researched, drafted and published on a schedule.",
+    long: "An agent that writes your blog in your voice instead of in the flat register everyone recognises by now. It reads what currently ranks for the topic, picks an angle those pages aren't taking, and writes against your real prices, real jobs and real opinions.",
+    tags: ["Claude", "WordPress", "Live research"],
+    points: [
+      "Voice profile built by crawling the writing you already have",
+      "Every post researched against the pages currently ranking",
+      "A separate critique pass rewrites the AI tells back out",
+      "A post missing a real fact refuses to publish rather than guessing",
+      "Straight into WordPress — as a draft if you'd rather read it first",
+    ],
+    timeline: "Setup: 1–2 weeks, then ongoing",
+    price: "From $1.5k / month", // PLACEHOLDER — set your own rate
+    placeholderImage: "generated post and critique trail",
+  },
 ] as const;
 
 /** How we work. Process description — no factual claims. */

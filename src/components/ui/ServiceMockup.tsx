@@ -25,7 +25,8 @@ export type MockupVariant =
   | "crm"
   | "ai"
   | "integrations"
-  | "cloud";
+  | "cloud"
+  | "seo";
 
 const TITLES: Record<MockupVariant, string> = {
   "web-apps": "Illustration of a custom web application dashboard",
@@ -34,6 +35,7 @@ const TITLES: Record<MockupVariant, string> = {
   ai: "Illustration of a document extraction and review pipeline",
   integrations: "Illustration of systems syncing through a central hub",
   cloud: "Illustration of an uptime and deployment monitoring dashboard",
+  seo: "Illustration of a blog post moving through research, draft and critique before publishing",
 };
 
 /** Horizontal bar standing in for a run of text. */
@@ -697,6 +699,129 @@ function Cloud() {
   );
 }
 
+/* ------------------------------------------------------------------ 07 */
+function Seo() {
+  const stages = ["RESEARCH", "OUTLINE", "DRAFT", "CRITIQUE", "PUBLISH"];
+  // The critique pass hunts structural tells, not vocabulary — shown as caught.
+  const tells = [
+    { t: "Uniform paragraph length", caught: true },
+    { t: "Triads (“X, Y and Z”)", caught: true },
+    { t: "“Not only… but also”", caught: true },
+    { t: "Paragraph with no fact", caught: true },
+    { t: "Summary paragraph", caught: false },
+  ];
+  return (
+    <>
+      {/* Pipeline rail */}
+      <Label x={64} y={92} size={10}>
+        PIPELINE
+      </Label>
+      <line x1="88" y1="132" x2="672" y2="132" stroke={LINE_STRONG} />
+      {stages.map((s, i) => {
+        const x = 88 + i * 146;
+        const done = i < 3;
+        const active = i === 3;
+        const colour = active ? "#e0a35f" : done ? "var(--accent)" : "rgba(255,255,255,0.28)";
+        return (
+          <g key={s}>
+            <circle cx={x} cy="132" r={active ? 11 : 9} fill={SURFACE} stroke={colour} strokeWidth="1.5" />
+            <circle cx={x} cy="132" r="3.5" fill={colour} />
+            <Label x={x} y={164} size={9} anchor="middle" fill={active ? "#e0a35f" : "rgba(255,255,255,0.44)"}>
+              {s}
+            </Label>
+          </g>
+        );
+      })}
+      {/* Critique loops back to draft */}
+      <path
+        d="M526 116 C526 84 380 84 380 116"
+        fill="none"
+        stroke="#e0a35f"
+        strokeOpacity="0.6"
+        strokeWidth="1.5"
+        strokeDasharray="4 3"
+      />
+      <path d="M385 111l-6 6-5-6z" fill="#e0a35f" />
+      <Label x={453} y={80} size={8.5} anchor="middle" fill="#e0a35f">
+        REWRITE ×2
+      </Label>
+
+      {/* Generated post */}
+      <rect x="64" y="200" width="376" height="300" rx="3" fill={PANEL} stroke={LINE_STRONG} />
+      <line x1="64" y1="240" x2="440" y2="240" stroke={LINE} />
+      <Label x={84} y={226} size={9.5}>
+        DRAFT · IN YOUR VOICE
+      </Label>
+      <Bar x={84} y={266} w={280} h={11} fill={BAR_BRIGHT} r={1} />
+      <Bar x={84} y={286} w={190} h={11} fill={BAR_BRIGHT} r={1} />
+      {[0, 1, 2, 3].map((i) => (
+        <Bar key={i} x={84} y={324 + i * 17} w={[336, 316, 340, 246][i]} h={5} fill={BAR_DIM} />
+      ))}
+      {/* A held fact, rendered as the agent's own marker */}
+      <rect x="84" y="404" width="212" height="22" rx="2" fill="rgba(224,163,95,0.12)" stroke="#e0a35f" strokeOpacity="0.5" />
+      <text x="94" y="419" fill="#e0a35f" fontSize="10.5" fontFamily={MONO}>
+        [NEEDS: call-out fee]
+      </text>
+      {[0, 1].map((i) => (
+        <Bar key={i} x={84} y={442 + i * 17} w={[330, 268][i]} h={5} fill={BAR_DIM} />
+      ))}
+
+      {/* Critique findings */}
+      <rect x="464" y="200" width="272" height="300" rx="3" fill={PANEL} stroke={LINE} />
+      <line x1="464" y1="240" x2="736" y2="240" stroke={LINE} />
+      <circle cx="486" cy="221" r="5" fill="#e0a35f" />
+      <Label x={500} y={226} size={9.5} fill="rgba(255,255,255,0.72)">
+        AI TELLS CAUGHT
+      </Label>
+      {tells.map((row, i) => {
+        const y = 268 + i * 40;
+        return (
+          <g key={row.t}>
+            <rect
+              x={484}
+              y={y - 14}
+              width="14"
+              height="14"
+              rx="2"
+              fill={row.caught ? "var(--accent)" : "transparent"}
+              stroke={row.caught ? "var(--accent)" : LINE_STRONG}
+            />
+            {row.caught && (
+              <path
+                d={`M${487.5} ${y - 7.5} l3 3 l5.5 -5.5`}
+                fill="none"
+                stroke={SURFACE}
+                strokeWidth="1.75"
+                strokeLinecap="round"
+              />
+            )}
+            <text
+              x={508}
+              y={y - 2}
+              fill={row.caught ? "rgba(255,255,255,0.4)" : "rgba(255,255,255,0.72)"}
+              fontSize="11.5"
+              fontFamily={MONO}
+              textDecoration={row.caught ? "line-through" : undefined}
+            >
+              {row.t}
+            </text>
+          </g>
+        );
+      })}
+
+      {/* Publish gate */}
+      <line x1="64" y1="530" x2="736" y2="530" stroke={LINE} />
+      <circle cx="72" cy="562" r="5" fill="#e0a35f" />
+      <Label x={88} y={566} size={9.5} fill="rgba(255,255,255,0.62)">
+        PUBLISH HELD · 1 FACT MISSING
+      </Label>
+      <Label x={736} y={566} size={9.5} anchor="end">
+        WORDPRESS · DRAFT
+      </Label>
+    </>
+  );
+}
+
 const VARIANTS: Record<MockupVariant, () => JSX.Element> = {
   "web-apps": WebApps,
   mobile: Mobile,
@@ -704,6 +829,7 @@ const VARIANTS: Record<MockupVariant, () => JSX.Element> = {
   ai: Ai,
   integrations: Integrations,
   cloud: Cloud,
+  seo: Seo,
 };
 
 export default function ServiceMockup({

@@ -39,7 +39,8 @@ anywhere public. The numbers are still in the file, so flipping the flag to
 | Contact form dropdown | asks what you need (no money) | asks budget range (`$25k – $60k` …) |
 
 Before flipping it on, replace the figures — they are the mockup's, sized for a
-40-person studio. Search for `PLACEHOLDER`.
+40-person studio. Search for `PLACEHOLDER`. The AI SEO agent's
+`From $1.5k / month` is a guess of mine, not a mockup value — set your own.
 
 **Still visible:** the sample deal values inside the CRM mockup on `/services`
 (`$4,200`, `$18,900` …) and the `$48k` KPI in the dashboard mockup. Those are a

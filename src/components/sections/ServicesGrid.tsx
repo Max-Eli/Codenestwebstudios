@@ -18,8 +18,19 @@ export default function ServicesGrid({ num = "01" }: { num?: string }) {
         </Reveal>
 
         <div className="hairline-grid mt-px grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s, i) => (
-            <Reveal key={s.id} index={i}>
+          {services.map((s, i) => {
+            // With a count that doesn't divide evenly, the final row would leave
+            // empty cells showing the grid's hairline background as a pale
+            // block. Stretch the last card to close the row instead.
+            const isLast = i === services.length - 1;
+            const span = [
+              isLast && services.length % 2 === 1 ? "sm:col-span-2" : "",
+              isLast && services.length % 3 === 1 ? "lg:col-span-3" : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
+            return (
+            <Reveal key={s.id} index={i} className={span}>
               <Link
                 href={`/services#${s.id}`}
                 className="hairline-cell group block h-full px-8 pb-9 pt-10 transition-[background,transform] duration-300 hover:-translate-y-1 hover:bg-[var(--bg-3)]"
@@ -40,7 +51,8 @@ export default function ServicesGrid({ num = "01" }: { num?: string }) {
                 </div>
               </Link>
             </Reveal>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
