@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
-import { site } from "@/content/site";
+import { site, hasWork, hasInsights } from "@/content/site";
 
+/** Work and Insights drop out while they have nothing published. */
 const nav = [
-  { label: "Services", href: "/services" },
-  { label: "Work", href: "/work" },
-  { label: "Engagements", href: "/engagements" },
-  { label: "About", href: "/about" },
-  { label: "Insights", href: "/insights" },
-];
+  { label: "Services", href: "/services", show: true },
+  { label: "Work", href: "/work", show: hasWork },
+  { label: "Engagements", href: "/engagements", show: true },
+  { label: "About", href: "/about", show: true },
+  { label: "Insights", href: "/insights", show: hasInsights },
+].filter((item) => item.show);
 
 export function Wordmark({ size = 13 }: { size?: number }) {
   return (

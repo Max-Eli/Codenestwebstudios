@@ -5,7 +5,7 @@ import Footer from "@/components/layout/Footer";
 import PageHero from "@/components/ui/PageHero";
 import ServiceMockup, { type MockupVariant } from "@/components/ui/ServiceMockup";
 import { Reveal } from "@/components/ui/Motion";
-import { services } from "@/content/site";
+import { services, showPricing, hasWork } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -73,8 +73,8 @@ export default function ServicesPage() {
                     style={{ borderColor: "var(--line-3)", color: "var(--fg-5)" }}
                   >
                     <span>{s.timeline}</span>
-                    {/* PLACEHOLDER pricing — edit in src/content/site.ts */}
-                    <span>{s.price}</span>
+                    {/* Figure shown only when showPricing is true (src/content/site.ts) */}
+                    <span>{showPricing ? s.price : "Quoted after discovery"}</span>
                   </div>
                 </Reveal>
 
@@ -108,8 +108,13 @@ export default function ServicesPage() {
                 >
                   Request a scoping estimate <span className="mono">→</span>
                 </Link>
-                <Link href="/work" data-magnetic className="btn btn-outline justify-between">
-                  See what we&apos;ve built <span className="mono">→</span>
+                <Link
+                  href={hasWork ? "/work" : "/engagements"}
+                  data-magnetic
+                  className="btn btn-outline justify-between"
+                >
+                  {hasWork ? "See what we've built" : "How engagements work"}{" "}
+                  <span className="mono">→</span>
                 </Link>
               </div>
             </Reveal>

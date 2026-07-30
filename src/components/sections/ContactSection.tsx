@@ -2,20 +2,12 @@
 
 import { useId, useState } from "react";
 import { Reveal } from "@/components/ui/Motion";
-import { site } from "@/content/site";
+import { site, showPricing, budgetOptions, engagementOptions } from "@/content/site";
 
 const steps = [
   "We reply within one business day with first questions.",
   "A 45-minute call to understand the process, free.",
   "A written scope and fixed estimate within two weeks.",
-];
-
-const budgets = [
-  "Not sure yet",
-  "$25k – $60k",
-  "$60k – $150k",
-  "$150k+",
-  "Monthly retainer",
 ];
 
 const fieldClass =
@@ -169,7 +161,7 @@ export default function ContactSection({ eyebrow = "10 / Start here" }: { eyebro
 
               <div className="flex flex-col gap-2.5">
                 <label htmlFor={`${uid}-budget`} className={labelClass} style={{ color: "var(--fg-5)" }}>
-                  Budget range
+                  {showPricing ? "Budget range" : "What do you need"}
                 </label>
                 <select
                   id={`${uid}-budget`}
@@ -179,7 +171,7 @@ export default function ContactSection({ eyebrow = "10 / Start here" }: { eyebro
                   className={fieldClass}
                   style={{ ...fieldStyle, background: "var(--bg-2)" }}
                 >
-                  {budgets.map((b) => (
+                  {(showPricing ? budgetOptions : engagementOptions).map((b) => (
                     <option key={b} value={b} style={{ background: "var(--bg-2)" }}>
                       {b}
                     </option>

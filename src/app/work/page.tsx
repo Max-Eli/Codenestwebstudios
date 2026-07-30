@@ -6,12 +6,15 @@ import CtaSection from "@/components/sections/CtaSection";
 import CaseStudyCard from "@/components/sections/CaseStudyCard";
 import EmptyState from "@/components/ui/EmptyState";
 import { Reveal } from "@/components/ui/Motion";
-import { caseStudies, industries } from "@/content/site";
+import { caseStudies, industries, hasWork } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Work",
   description: "Selected projects — what we built, who for, and what changed afterwards.",
   alternates: { canonical: "/work" },
+  // Kept live so external links don't 404, but withheld from search while
+  // there is nothing published — a thin page indexed now is a liability later.
+  robots: hasWork ? undefined : { index: false, follow: true },
 };
 
 export default function WorkPage() {

@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { site } from "@/content/site";
+import { site, hasWork, hasInsights } from "@/content/site";
 import { Wordmark } from "./Header";
 
 const links = [
-  { label: "Services", href: "/services" },
-  { label: "Work", href: "/work" },
-  { label: "Engagements", href: "/engagements" },
-  { label: "About", href: "/about" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
-];
+  { label: "Services", href: "/services", show: true },
+  { label: "Work", href: "/work", show: hasWork },
+  { label: "Engagements", href: "/engagements", show: true },
+  { label: "About", href: "/about", show: true },
+  { label: "Insights", href: "/insights", show: hasInsights },
+  { label: "Contact", href: "/contact", show: true },
+].filter((l) => l.show);
 
 const legal = [
   { label: "Privacy", href: "/privacy" },

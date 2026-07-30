@@ -23,17 +23,47 @@ since October 2024), so none of it was carried over.
 The mockup's original values are preserved in comments next to each export, so
 restoring the layout is a copy-paste once you have real equivalents.
 
-## 2. Placeholder numbers that ARE live on the site
+## 2. Pricing is hidden site-wide
 
-These render right now with the mockup's figures. Search `src/content/site.ts`
-for `PLACEHOLDER` to find every one.
+`showPricing = false` in `src/content/site.ts`. No figure of yours appears
+anywhere public. The numbers are still in the file, so flipping the flag to
+`true` restores all of it — but note the surrounding copy switches too:
 
-- `services[].price` — six figures, `$22k` to `$60k`, shown on `/services`
-- `engagements[].price` — `from $28k` / `from $18k` / `from $4.5k`, shown on
-  `/engagements` and the homepage
-- `discovery.price` — `$4,800` for the discovery week, on `/engagements`
-- `site.phone` — empty; set it and it appears in the contact block, leave it
-  and every phone reference stays hidden
+| Where | With pricing off | With pricing on |
+|---|---|---|
+| `/services` price row | "Quoted after discovery" | `From $45k` etc. |
+| Engagement cards | "Fixed price per phase" / "Monthly, rolling terms" / "Monthly, cancel anytime" | `from $28k` / `from $18k` / `from $4.5k` |
+| `/engagements` headline | "A fixed number you can take to your board." | "Prices you can take to your board." |
+| `/engagements` lede | argues *against* rate cards | argues *for* published numbers |
+| Discovery week | "One fixed fee." | "A flat $4,800." |
+| Contact form dropdown | asks what you need (no money) | asks budget range (`$25k – $60k` …) |
+
+Before flipping it on, replace the figures — they are the mockup's, sized for a
+40-person studio. Search for `PLACEHOLDER`.
+
+**Still visible:** the sample deal values inside the CRM mockup on `/services`
+(`$4,200`, `$18,900` …) and the `$48k` KPI in the dashboard mockup. Those are a
+fictional customer's records inside a depicted app screen, not your rates. Say
+the word if you'd rather they were abstracted to bars.
+
+`site.phone` is empty — set it and it appears in the contact block; leave it and
+every phone reference stays hidden.
+
+## 2b. Work and Insights are hidden from navigation
+
+Because `caseStudies` and `insights` are empty, `hasWork` / `hasInsights` are
+false, which removes those items from the header, the footer, and every
+secondary CTA (the hero button becomes "See what we build" → `/services`). The
+routes stay live so external links don't 404, but they're `noindex` and dropped
+from the sitemap.
+
+Both come back automatically the moment either array gets an entry — there is
+no switch to remember.
+
+If client consent is the blocker, an anonymised case study usually isn't: "a
+dispatch CRM for a 90-van plumbing operation" identifies nobody, and most NDAs
+permit describing work without naming the client. Set `client` to the sector
+instead of a company name.
 
 ## 3. Claims that were softened
 

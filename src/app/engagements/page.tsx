@@ -6,12 +6,12 @@ import PageHero from "@/components/ui/PageHero";
 import Accordion from "@/components/ui/Accordion";
 import CtaSection from "@/components/sections/CtaSection";
 import { Reveal } from "@/components/ui/Motion";
-import { engagements, discovery, comparison, moneyFaqs } from "@/content/site";
+import { engagements, discovery, comparison, moneyFaqs, showPricing, hasWork } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Engagements",
   description:
-    "Fixed-scope projects, dedicated squads and long-term care — with starting prices published up front.",
+    "Fixed-scope projects, dedicated squads and long-term care — each with a written, fixed estimate after a paid discovery week.",
   alternates: { canonical: "/engagements" },
 };
 
@@ -22,8 +22,16 @@ export default function EngagementsPage() {
       <main>
         <PageHero
           eyebrow="Engagements"
-          title="Prices you can take to your board."
-          lede="We publish our starting numbers because hiding them wastes everyone's first two calls. The exact figure comes after discovery — and then it stops moving unless the scope does."
+          title={
+            showPricing
+              ? "Prices you can take to your board."
+              : "A fixed number you can take to your board."
+          }
+          lede={
+            showPricing
+              ? "We publish our starting numbers because hiding them wastes everyone's first two calls. The exact figure comes after discovery — and then it stops moving unless the scope does."
+              : "We don't publish a rate card, because a number without your scope behind it is guesswork dressed up as a quote. You get a written, fixed figure at the end of the discovery week — and then it stops moving unless the scope does."
+          }
         />
 
         {/* Three tiers */}
@@ -51,13 +59,28 @@ export default function EngagementsPage() {
 
                   <div>
                     <h2 className="text-2xl font-semibold tracking-[-0.025em]">{e.title}</h2>
-                    {/* PLACEHOLDER pricing — edit in src/content/site.ts */}
-                    <div className="mt-5 text-[38px] font-medium tracking-[-0.04em] md:text-[42px]">
-                      {e.price}
-                    </div>
-                    <div className="mono mt-2 text-[11.5px]" style={{ color: "var(--fg-5)" }}>
-                      {e.cadence}
-                    </div>
+                    {showPricing ? (
+                      <>
+                        <div className="mt-5 text-[38px] font-medium tracking-[-0.04em] md:text-[42px]">
+                          {e.price}
+                        </div>
+                        <div className="mono mt-2 text-[11.5px]" style={{ color: "var(--fg-5)" }}>
+                          {e.cadence}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div
+                          className="mt-5 text-[24px] font-medium tracking-[-0.025em]"
+                          style={{ color: "var(--accent-bright)" }}
+                        >
+                          {e.priceAlt}
+                        </div>
+                        <div className="mono mt-2 text-[11.5px]" style={{ color: "var(--fg-5)" }}>
+                          Quoted after the discovery week
+                        </div>
+                      </>
+                    )}
                     <p className="mt-6 text-base leading-relaxed" style={{ color: "var(--fg-4)" }}>
                       {e.body}
                     </p>
@@ -94,8 +117,8 @@ export default function EngagementsPage() {
               <div className="label-mono mb-5">Where everything starts</div>
               <h2 className="heading-2">The discovery week</h2>
               <p className="mt-6 max-w-[42ch] text-[16.5px] leading-[1.65] md:text-[17.5px]" style={{ color: "var(--fg-3)" }}>
-                {/* PLACEHOLDER pricing — edit in src/content/site.ts */}
-                A flat {discovery.price}. {discovery.intro}
+                {showPricing ? `A flat ${discovery.price}. ` : `${discovery.priceAlt}. `}
+                {discovery.intro}
               </p>
               <p className="mt-5 max-w-[42ch] text-[16.5px] leading-[1.65] md:text-[17.5px]" style={{ color: "var(--fg-3)" }}>
                 {discovery.caveat}
@@ -172,8 +195,9 @@ export default function EngagementsPage() {
               className="mono mt-6 text-[11.5px] tracking-[0.06em]"
               style={{ color: "var(--fg-6)" }}
             >
-              Figures are indicative starting points, not a quote. Travel and third-party licences
-              billed at cost.
+              {showPricing
+                ? "Figures are indicative starting points, not a quote. Travel and third-party licences billed at cost."
+                : "Travel and third-party licences are billed at cost. Everything else is fixed in writing before work starts."}
             </Reveal>
           </div>
         </section>
@@ -191,7 +215,11 @@ export default function EngagementsPage() {
         <CtaSection
           title="Start with the discovery week."
           primary={{ label: "Request a scoping estimate", href: "/contact" }}
-          secondary={{ label: "See what that produced elsewhere", href: "/work" }}
+          secondary={
+            hasWork
+              ? { label: "See what that produced elsewhere", href: "/work" }
+              : { label: "See what we build", href: "/services" }
+          }
         />
       </main>
       <Footer />

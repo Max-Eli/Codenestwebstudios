@@ -34,6 +34,43 @@ export const site = {
   ],
 } as const;
 
+/**
+ * MASTER SWITCH FOR PUBLIC PRICING.
+ *
+ * false → every figure is hidden across /services, /engagements and the
+ * homepage, and the surrounding copy switches to the "quoted after discovery"
+ * argument instead of the "we publish our numbers" one. The numbers themselves
+ * stay in this file, so flipping this back to true restores everything.
+ *
+ * Not affected: the budget-range dropdown on the contact form (that asks the
+ * visitor's budget, it doesn't state yours) and the billing terms in the
+ * /engagements FAQ (milestones, Net 14 — terms, not prices).
+ */
+export const showPricing = false;
+
+/**
+ * The contact form's qualifying dropdown.
+ *
+ * With pricing hidden it asks about the shape of the work rather than money —
+ * a "$25k – $60k" first option tells every visitor the floor is $25k, which is
+ * a louder price signal than anything on /services. Still qualifies the lead.
+ */
+export const budgetOptions = [
+  "Not sure yet",
+  "$25k – $60k",
+  "$60k – $150k",
+  "$150k+",
+  "Monthly retainer",
+] as const;
+
+export const engagementOptions = [
+  "Not sure yet",
+  "One well-defined piece of work",
+  "A full project, start to launch",
+  "Ongoing support for something live",
+  "Taking over software someone else built",
+] as const;
+
 /** Tech marquee under the hero. Purely descriptive — no claims. */
 export const stack = [
   "TypeScript",
@@ -231,14 +268,17 @@ export const engagements = [
     id: "fixed",
     title: "Fixed-scope project",
     price: "from $28k", // PLACEHOLDER — mockup figure
+    priceAlt: "Fixed price per phase",
     cadence: "per phase, billed on milestones",
     body: "Best when the outcome is clear: one app, one integration, one manual process to replace.",
     featured: false,
     cta: "Scope a project",
     includes: [
+      // "Fixed price per phase" lives in the card headline, so it isn't
+      // repeated here.
       "Written scope and phase plan",
-      "Fixed price per phase",
       "Design, build, test, launch",
+      "Any change order priced before work starts",
       "30 days of post-launch fixes",
     ],
   },
@@ -246,6 +286,7 @@ export const engagements = [
     id: "squad",
     title: "Dedicated squad",
     price: "from $18k", // PLACEHOLDER — mockup figure
+    priceAlt: "Monthly, rolling terms",
     cadence: "per month, rolling 3-month terms",
     body: "For roadmaps rather than single deliverables, where priorities will change as you learn.",
     featured: true,
@@ -261,6 +302,7 @@ export const engagements = [
     id: "care",
     title: "Care & improvement",
     price: "from $4.5k", // PLACEHOLDER — mockup figure
+    priceAlt: "Monthly, cancel anytime",
     cadence: "per month, cancel with 30 days' notice",
     body: "For software already live — ours or inherited from someone else.",
     featured: false,
@@ -277,6 +319,8 @@ export const engagements = [
 /** The paid discovery week. `price` is a PLACEHOLDER figure from the mockup. */
 export const discovery = {
   price: "$4,800", // PLACEHOLDER — mockup figure
+  /** Used in place of `price` when showPricing is false. */
+  priceAlt: "One fixed fee",
   intro:
     "Five days with your team, ending in a written scope, an architecture sketch and a fixed estimate. Credited back in full if you continue with us.",
   caveat:
@@ -513,3 +557,18 @@ export type Insight = {
 };
 
 export const insights: Insight[] = [];
+
+/**
+ * Derived navigation visibility.
+ *
+ * /work and /insights are hidden from the header, footer and every secondary
+ * CTA while they have nothing published — sending a prospect to an empty page
+ * from your main nav costs more than the missing link does. The routes stay
+ * live (so external links don't 404) but are marked noindex and dropped from
+ * the sitemap until there's content.
+ *
+ * Both flip back on their own the moment `caseStudies` or `insights` gets an
+ * entry — there's no switch to remember.
+ */
+export const hasWork = caseStudies.length > 0;
+export const hasInsights = insights.length > 0;

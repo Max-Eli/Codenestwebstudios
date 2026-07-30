@@ -6,13 +6,14 @@ import PageHero from "@/components/ui/PageHero";
 import CtaSection from "@/components/sections/CtaSection";
 import EmptyState from "@/components/ui/EmptyState";
 import { Reveal } from "@/components/ui/Motion";
-import { insights } from "@/content/site";
+import { insights, hasInsights } from "@/content/site";
 
 export const metadata: Metadata = {
   title: "Insights",
   description:
     "Practical writing on custom software, estimates, AI automation and buying decisions.",
   alternates: { canonical: "/insights" },
+  robots: hasInsights ? undefined : { index: false, follow: true },
 };
 
 export default function InsightsPage() {

@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
       ${row("Name", name)}
       ${row("Email", email)}
       ${row("Company", company)}
-      ${row("Budget", budget)}
+      ${row("Need", budget)}
       ${row("Phone", phone)}
       <p><strong>SMS consent:</strong> ${smsConsent ? "Opted in" : "Not opted in"}</p>
       ${

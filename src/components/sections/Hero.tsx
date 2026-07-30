@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ParticleField from "@/components/ui/ParticleField";
 import { Reveal, Parallax } from "@/components/ui/Motion";
-import { site, stack } from "@/content/site";
+import { site, stack, hasWork } from "@/content/site";
 
 export default function Hero() {
   return (
@@ -38,8 +38,13 @@ export default function Hero() {
               Get an estimate
               <ArrowRight className="h-4 w-4" />
             </Link>
-            <Link href="/work" data-magnetic className="btn btn-outline">
-              See recent work
+            {/* Points at Work only when there is work to see. */}
+            <Link
+              href={hasWork ? "/work" : "/services"}
+              data-magnetic
+              className="btn btn-outline"
+            >
+              {hasWork ? "See recent work" : "See what we build"}
             </Link>
           </Reveal>
 

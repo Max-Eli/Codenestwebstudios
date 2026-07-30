@@ -1,5 +1,5 @@
 import { Reveal } from "@/components/ui/Motion";
-import { engagements } from "@/content/site";
+import { engagements, showPricing } from "@/content/site";
 
 export default function EngagementsSection({
   eyebrow = "06 / Engagements",
@@ -41,12 +41,25 @@ export default function EngagementsSection({
                 </div>
               )}
               <h3 className="text-[22px] font-semibold tracking-[-0.02em]">{e.title}</h3>
-              <div className="mt-6 text-[34px] font-medium tracking-[-0.035em] md:text-[38px]">
-                {e.price}
-              </div>
-              <div className="mono mt-2 text-[11.5px]" style={{ color: "var(--fg-5)" }}>
-                {e.cadence}
-              </div>
+              {showPricing ? (
+                <>
+                  <div className="mt-6 text-[34px] font-medium tracking-[-0.035em] md:text-[38px]">
+                    {e.price}
+                  </div>
+                  <div className="mono mt-2 text-[11.5px]" style={{ color: "var(--fg-5)" }}>
+                    {e.cadence}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="mt-6 text-[22px] font-medium tracking-[-0.02em]" style={{ color: "var(--accent-bright)" }}>
+                    {e.priceAlt}
+                  </div>
+                  <div className="mono mt-2 text-[11.5px]" style={{ color: "var(--fg-5)" }}>
+                    Quoted after discovery
+                  </div>
+                </>
+              )}
               <p className="mt-6 text-[15.5px] leading-relaxed" style={{ color: "var(--fg-4)" }}>
                 {e.body}
               </p>
