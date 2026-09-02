@@ -28,8 +28,23 @@ export default function InsightPage({ params }: Props) {
   const post = insights.find((p) => p.slug === params.slug);
   if (!post) notFound();
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: post.title,
+    description: post.excerpt,
+    datePublished: post.date,
+    author: { "@type": "Organization", name: "CodeNest Web Studios", url: "https://codenestwebstudios.com" },
+    publisher: { "@type": "Organization", name: "CodeNest Web Studios", url: "https://codenestwebstudios.com" },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://codenestwebstudios.com/insights/${post.slug}` },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
       <Header />
       <main>
         <section className="pb-12 pt-32 md:pt-[150px]">
